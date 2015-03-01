@@ -1,0 +1,11 @@
+#!/bin/sh
+$*
+if test $? -eq 0; then
+    MESSAGE="Complete!"
+    P=0
+else
+    MESSAGE="Error happens..."
+    P=1
+fi
+growlnotify -t $MESSAGE -m "$*" -p $P 
+exit $P

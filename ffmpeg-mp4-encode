@@ -1,0 +1,75 @@
+#!/usr/bin/env python
+
+import subprocess
+import json
+import sys
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--file', required=True)
+parser.add_argument('--aspect', nargs='?')
+parser.add_argument('--vf', nargs='?')
+parser.add_argument('--size', nargs='?')
+parser.add_argument('--output', nargs='?', default='./')
+parser.add_argument('--thread_num', nargs='?', default='6')
+parser.add_argument('--video_crf', nargs='?', default='18')
+parser.add_argument('--video_qmin', nargs='?', default='25')
+parser.add_argument('--audio_bitrate', nargs='?', default='256k')
+parser.add_argument('--audio_freq', nargs='?', default='48000')
+args = parser.parse_args()
+
+aspect = []
+if args.aspect:
+    aspect.append('-aspect')
+    aspect.append(args.aspect)
+
+size = []
+if args.size:
+    size.append('-s')
+    size.append(args.size)
+
+vf = []
+if args.vf:
+    vf.append('-vf')
+    vf.append(args.vf)
+
+processArg = ['ffmpeg',
+              '-i', args.file,
+              '-y',
+              '-vcodec', 'libx264',
+              '-crf', args.video_crf,
+              '-flags', '+ilme+ildct+loop',
+              '-cmp', 'chroma',
+              '-bf', '16',
+              '-b_strategy', '1',
+              '-direct-pred', '3',
+              '-coder', '1',
+              '-trellis', '1',
+              '-me_method', 'umh',
+              '-me_range', '16',
+              '-refs', '4',
+              '-subq', '9',
+              '-sc_threshold', '40',
+              '-partitions', '+parti8x8+parti4x4+partp8x8+partb8x8',
+              '-mixed-refs', '1',
+              '-8x8dct', '1',
+              '-fast-pskip', '1',
+              '-weightb', '1',
+              '-rc_eq', '"blurCplx^(1-qComp)"',
+              '-qmin', args.video_qmin,
+              '-qdiff', '4',
+              '-qsquish', '1',
+              '-keyint_min', '25',
+              '-i_qfactor', '0.71',
+              '-bidir_refine', '1',
+              '-g', '150',
+              '-deblock', '0:0',
+              '-acodec', 'libfaac',
+              '-ar', args.audio_freq,
+              '-ab', args.audio_bitrate,
+              '-threads', args.thread_num] + aspect + size + vf
+# processArg.append(args.output + "/" + args.file + ".mp4")
+processArg.append(args.output + "/" + args.file.split("/")[-1] + ".mp4")
+processArg = filter(bool, processArg)
+print("Command: " + " ".join(processArg))
+subprocess.call(processArg)

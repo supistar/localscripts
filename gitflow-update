@@ -1,0 +1,18 @@
+#!/bin/sh
+
+CURRENT_BRANCH=$(git branch | grep -e '^\*' | sed -e 's/^[\* ]*//g')
+DEV_BRANCH=$(git branch | grep -e 'develop$' | sed -e 's/^[\* ]*//g' | grep -e '^develop$')
+MASTER_BRANCH=$(git branch | grep -e 'master$' | sed -e 's/^[\* ]*//g' | grep -e '^master$')
+echo "Current : ${CURRENT_BRANCH}"
+if [ "${DEV_BRANCH}" = "develop" ]; then
+    echo "Fetching ${DEV_BRANCH}..."
+    git checkout ${DEV_BRANCH}
+    git pull
+fi
+if [ "${MASTER_BRANCH}" = "master" ]; then
+    echo "Fetching ${MASTER_BRANCH}..."
+    git checkout ${MASTER_BRANCH}
+    git pull
+fi
+git checkout ${CURRENT_BRANCH}
+echo "Update is finished."

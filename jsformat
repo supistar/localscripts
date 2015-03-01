@@ -1,0 +1,9 @@
+# Format the file using js-beautify.
+# It is necessary to install js-beautify prior executing the script. (from npm).
+# About js-beautify : https://github.com/einars/js-beautify
+if [ -z "$1" ]
+  then
+    echo "Usage : format.sh /path/of/file/to/format"
+    exit
+fi
+js-beautify -r -s 2 $1 --html
