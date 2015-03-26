@@ -1,9 +1,22 @@
-# Format the file using js-beautify.
-# It is necessary to install js-beautify prior executing the script. (from npm).
-# About js-beautify : https://github.com/einars/js-beautify
-if [ -z "$1" ]
-  then
-    echo "Usage : format.sh /path/of/file/to/format"
-    exit
-fi
-js-beautify -r -s 2 $1 --html
+#!/usr/bin/env python
+
+import subprocess
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--file', required=True)
+parser.add_argument('--indent', nargs='?', default='2')
+parser.add_argument('--type', nargs='?', default='html')
+args = parser.parse_args()
+
+processArg = ['js-beautify',
+              '-r',
+              '-s',
+              args.indent,
+              '--type',
+              args.type,
+              '--file',
+              args.file,
+              ]
+processArg = filter(bool, processArg)
+subprocess.call(processArg)
