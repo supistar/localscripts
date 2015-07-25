@@ -1,5 +1,5 @@
 #!/bin/sh
 
 # Create symlinks
-PWD=$(PWD)
+PWD=$(pwd)
 ln -sf ${PWD}/scripts/* /usr/local/bin
