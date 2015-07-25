@@ -15,7 +15,7 @@ processArg = ['js-beautify',
               args.indent,
               '--type',
               args.type,
-              '--file',
+              '-f',
               args.file,
               ]
 processArg = filter(bool, processArg)
