@@ -52,7 +52,6 @@ if args.start:
     duration.append(args.duration)
 
 processArg = ['ffmpeg']
-processArg = ['ffmpeg']
 processArg += ss
 processArg += ['-i', args.file,
                '-y',
