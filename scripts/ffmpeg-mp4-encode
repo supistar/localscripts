@@ -12,6 +12,7 @@ parser.add_argument('--output', nargs='?', default='./')
 parser.add_argument('--thread_num', nargs='?', default='6')
 parser.add_argument('--video_crf', nargs='?', default='18')
 parser.add_argument('--video_qmin', nargs='?', default='25')
+parser.add_argument('--video_scanning', nargs='?', default='interlaced', choices=['interlaced', 'progressive'])
 parser.add_argument('--audio_bitrate', nargs='?', default='256k')
 parser.add_argument('--audio_freq', nargs='?', default='48000')
 group = parser.add_argument_group('trim')
@@ -51,13 +52,19 @@ if args.start:
     duration.append('-t')
     duration.append(args.duration)
 
+flags = '+loop'
+deinterlace = '-deinterlace'
+if args.video_scanning == 'interlaced':
+    flags += '+ilme+ildct'
+    deinterlace = ''
+
 processArg = ['ffmpeg']
 processArg += ss
 processArg += ['-i', args.file,
                '-y',
                '-vcodec', 'libx264',
                '-crf', args.video_crf,
-               '-flags', '+ilme+ildct+loop',
+               '-flags', flags, deinterlace,
                '-cmp', 'chroma',
                '-bf', '16',
                '-b_strategy', '1',
